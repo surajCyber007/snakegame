@@ -52,20 +52,35 @@ const Game = () => {
   }, [score]);
 
   const onKeyDown = (e) => {
-    console.log(e)
     e = e || window.event;
     switch (e.keyCode || e) {
       case 38:
-        setDirection("UP");
+        if (direction !== "DOWN") {
+          setDirection("UP");
+        } else {
+          setDirection("DOWN");
+        }
         break;
       case 40:
-        setDirection("DOWN");
+        if (direction !== "UP") {
+          setDirection("DOWN");
+        } else {
+          setDirection("UP");
+        }
         break;
       case 37:
-        setDirection("LEFT");
+        if (direction !== "RIGHT") {
+          setDirection("LEFT");
+        } else {
+          setDirection("RIGHT");
+        }
         break;
       case 39:
-        setDirection("RIGHT");
+        if (direction !== "LEFT") {
+          setDirection("RIGHT");
+        } else {
+          setDirection("LEFT");
+        }
         break;
       case 32:
         togglePause();
@@ -249,20 +264,20 @@ const Game = () => {
       </div>
       <div className="mt-5">
         <div>
-          <button onClick={()=>onKeyDown(38)}>
+          <button onClick={() => onKeyDown(38)}>
             <FaCircleChevronUp fill="#69760c" size={44} />
           </button>
         </div>
         <div className="flex space-x-12 -ms-11 -mt-1 ">
-          <button onClick={()=>onKeyDown(37)}>
+          <button onClick={() => onKeyDown(37)}>
             <FaCircleChevronLeft fill="#69760c" size={44} />
           </button>
-          <button onClick={()=>onKeyDown(39)}>
+          <button onClick={() => onKeyDown(39)}>
             <FaCircleChevronRight fill="#69760c" size={44} />
           </button>
         </div>
         <div>
-          <button onClick={()=>onKeyDown(40)}>
+          <button onClick={() => onKeyDown(40)}>
             <FaCircleChevronDown fill="#69760c" size={44} />
           </button>
         </div>
