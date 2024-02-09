@@ -14,12 +14,17 @@ import {
 import foodPop from "../sounds/food-pop.wav";
 import bigFoodPop from "../sounds/big-food-pop.wav";
 import gameOver from "../sounds/game-over.wav";
+import bigFoodDisappear from "../sounds/big-food-disappear.wav";
 import GameOverPopup from "./GameOverPopup";
+import { CgNotes } from "react-icons/cg";
+import { SlSpeedometer } from "react-icons/sl";
+import RulesPopup from "./RulesPopup";
 
 const Game = () => {
   const foodGenerationSound = new Audio(foodPop);
   const bigFoodGeneration = new Audio(bigFoodPop);
   const gameOverSound = new Audio(gameOver);
+  const bigFoodDisap = new Audio(bigFoodDisappear);
 
   const getRandomCoordinates = () => {
     let min = 1;
@@ -44,6 +49,9 @@ const Game = () => {
   const [foodEatenCount, setFoodEatenCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [sendScore, setSendScore] = useState(0);
+  const [timerId, setTimerId] = useState(null);
+  const [showSpeed, setShowSpeed] = useState(false);
+  const [showRules, setShowRules] = useState(false);
 
   useEffect(() => {
     document.onkeydown = onKeyDown;
@@ -54,13 +62,38 @@ const Game = () => {
     return () => clearInterval(gameInterval);
   }, [snakeDots, paused]);
 
+  //   useEffect(() => {
+  //     if (foodEatenCount === 5) {
+  //       setBigFoodDot(getRandomCoordinates());
+  //       setFoodEatenCount(0); // Reset the count
+  //       bigFoodGeneration.play();
+  //     }
+  //   }, [score]);
+
   useEffect(() => {
     if (foodEatenCount === 5) {
       setBigFoodDot(getRandomCoordinates());
       setFoodEatenCount(0); // Reset the count
       bigFoodGeneration.play();
+
+      // Set a timer for ten seconds
+      const timer = setTimeout(() => {
+        // If the big food is not eaten within ten seconds, remove it
+        setBigFoodDot(null);
+        bigFoodDisap.play();
+      }, 10000);
+
+      // Save the timer ID
+      setTimerId(timer);
     }
-  }, [score]);
+
+    // Clean up the timer when the component unmounts or when a new big food is generated
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
+  }, [foodEatenCount]);
 
   const onKeyDown = (e) => {
     e = e || window.event;
@@ -246,6 +279,22 @@ const Game = () => {
     setPaused(!paused);
   };
 
+  const toggleSpeedIcon = () => {
+    setShowSpeed(!showSpeed);
+    setPaused(!paused);
+  };
+
+  const toggleRules = () => {
+    setShowRules(!showRules);
+    setPaused(!paused);
+  };
+
+  const handleSpeedChange = (speed) => {
+    setSpeed(speed);
+    setShowSpeed(false);
+    setPaused(false);
+  };
+
   const handleReplayGame = () => {
     setShowModal(false);
     setPaused(false);
@@ -262,7 +311,7 @@ const Game = () => {
     <div className="relative">
       <div className="h-[60vh] w-[100%] px-2 flex flex-col items-center">
         <div className="score-area flex justify-around items-center border-b-2 border-[#101503]">
-          <div className="text-2xl">
+          <div className="text-2xl font-mono">
             <div className="text-[#2e3d06]">Score: {score}</div>
             <div className="text-[#2e3d06]">High Score: {highScore}</div>
           </div>
@@ -302,10 +351,57 @@ const Game = () => {
             <FaCircleChevronDown fill="#69760c" size={44} />
           </button>
         </div>
+
+        <button onClick={toggleRules} className="absolute top-4 left-8">
+          <CgNotes fill="#69760c" size={40} />
+        </button>
+
+        {showRules && <RulesPopup toggleRules={toggleRules} />}
+
+        <button className="absolute right-8 top-4" onClick={toggleSpeedIcon}>
+          <SlSpeedometer fill="#69760c" size={40} />
+        </button>
+        {showSpeed && (
+          <div className="absolute right-1 -top-44 flex flex-col space-y-1 font-mono">
+            <button
+              onClick={() => handleSpeedChange(80)}
+              className="px-4 py-1 border border-black bg-[#aabb30] rounded-md"
+            >
+              Very Fast
+            </button>
+            <button
+              onClick={() => handleSpeedChange(100)}
+              className="px-4 py-1 border border-black bg-[#aabb30] rounded-md"
+            >
+              Fast
+            </button>
+            <button
+              onClick={() => handleSpeedChange(125)}
+              className="px-4 py-1 border border-black bg-[#aabb30] rounded-md"
+            >
+              Medium
+            </button>
+            <button
+              onClick={() => handleSpeedChange(150)}
+              className="px-4 py-1 border border-black bg-[#aabb30] rounded-md"
+            >
+              Slow
+            </button>
+            <button
+              onClick={() => handleSpeedChange(175)}
+              className="px-4 py-1 border border-black bg-[#aabb30] rounded-md"
+            >
+              Very Slow
+            </button>
+          </div>
+        )}
       </div>
       {showModal && (
         <div>
-          <GameOverPopup sendScore={sendScore} handleClosePopup={handleReplayGame} />
+          <GameOverPopup
+            sendScore={sendScore}
+            handleClosePopup={handleReplayGame}
+          />
         </div>
       )}
     </div>
