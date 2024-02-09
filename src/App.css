@@ -1,8 +1,9 @@
 /* Game.css */
 
-.schore-area {
+.score-area {
   height: 100px;
-  background: lightgreen;
+  background: #cce705;
+  width: 100%;
 }
 
 .game-area {
@@ -21,27 +22,37 @@
 
 /* Snake.css */
 .snake-dot {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   background-color: #2a360e;
   position: absolute;
 }
 
 .snake-head {
   background-color: #2e3d06;
-  height: 20px;
-  width: 20px;
+  height: 10px;
+  width: 10px;
 }
 
 .snake-tail {
   background-color: #2e3d06;
-  height: 20px;
-  width: 20px;
+  height: 10px;
+  width: 10px;
 }
 
 /* Food.css */
 .food {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   position: absolute;
+}
+
+/* BigFood.js */
+
+.big-food {
+  position: absolute;
+  width: 15px; /* Adjust the width and height as needed */
+  height: 15px;
+  background-color: red; /* Adjust the background color or add an image */
+  border-radius: 50%; /* Makes it round, adjust as needed */
 }

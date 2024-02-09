@@ -1,187 +1,10 @@
-// // Game.js
-// import React, { useState, useEffect } from "react";
-// import Snake from "./Snake";
-// import Food from "./Food";
-// import { FaPlay } from "react-icons/fa";
-// import { IoMdPause } from "react-icons/io";
-
-// const getRandomCoordinates = () => {
-//   let min = 1;
-//   let max = 98;
-//   let x = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
-//   let y = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
-//   return [x, y];
-// };
-
-// const Game = () => {
-//   const [snakeDots, setSnakeDots] = useState([
-//     [0, 0],
-//     [2, 0],
-//   ]);
-//   const [foodDot, setFoodDot] = useState(getRandomCoordinates());
-//   const [direction, setDirection] = useState("RIGHT");
-//   const [speed, setSpeed] = useState(100);
-//   const [score, setScore] = useState(0); // Add score state
-//   const [highScore, setHighScore] = useState(0);
-//   const [paused, setPaused] = useState(false);
-
-//   useEffect(() => {
-//     document.onkeydown = onKeyDown;
-//     checkIfOutOfBorders();
-//     checkIfCollapsed();
-//     checkIfEat();
-
-//     const gameInterval = setInterval(() => {
-//       moveSnake();
-//       setScore(snakeDots.length - 2); // Update score based on snake length
-//     }, speed);
-
-//     return () => clearInterval(gameInterval);
-//   }, [snakeDots, speed, paused]);
-
-//   const onKeyDown = (e) => {
-//     e = e || window.event;
-//     switch (e.keyCode) {
-//       case 38:
-//         setDirection("UP");
-//         break;
-//       case 40:
-//         setDirection("DOWN");
-//         break;
-//       case 37:
-//         setDirection("LEFT");
-//         break;
-//       case 39:
-//         setDirection("RIGHT");
-//         break;
-//       case 80: // "p" key to toggle pause/play
-//         togglePause();
-//         break;
-//       default:
-//         break;
-//     }
-//   };
-
-//   const togglePause = () => {
-//     setPaused(!paused);
-//   };
-
-//   const moveSnake = () => {
-//     if (!paused) {
-//       // Move snake only if not paused
-//       let dots = [...snakeDots];
-//       let head = dots[dots.length - 1];
-
-//       switch (direction) {
-//         case "RIGHT":
-//           head = [head[0] + 2, head[1]];
-//           break;
-//         case "LEFT":
-//           head = [head[0] - 2, head[1]];
-//           break;
-//         case "DOWN":
-//           head = [head[0], head[1] + 2];
-//           break;
-//         case "UP":
-//           head = [head[0], head[1] - 2];
-//           break;
-//         default:
-//           break;
-//       }
-
-//       dots.push(head);
-//       dots.shift();
-//       setSnakeDots(dots);
-//     }
-//   };
-
-//   const checkIfEat = () => {
-//     let head = snakeDots[snakeDots.length - 1];
-//     let food = foodDot;
-
-//     if (head[0] === food[0] && head[1] === food[1]) {
-//       setFoodDot(getRandomCoordinates());
-//       enlargeSnake();
-//       increaseSpeed();
-//       setScore(score + 1); // Increment the score
-//     }
-//   };
-
-//   const enlargeSnake = () => {
-//     let newSnake = [...snakeDots];
-//     newSnake.unshift([]);
-//     setSnakeDots(newSnake);
-//   };
-
-//   const increaseSpeed = () => {
-//     if (speed > 10) {
-//       setSpeed(speed - 10);
-//     }
-//   };
-
-//   console.log("speed", speed);
-
-//   const checkIfOutOfBorders = () => {
-//     let head = snakeDots[snakeDots.length - 1];
-//     if (head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0) {
-//       handleGameOver();
-//     }
-//   };
-
-//   const checkIfCollapsed = () => {
-//     let snake = [...snakeDots];
-//     let head = snake[snake.length - 1];
-//     snake.pop();
-//     snake.forEach((dot) => {
-//       if (head[0] === dot[0] && head[1] === dot[1]) {
-//         handleGameOver();
-//       }
-//     });
-//   };
-
-//   const handleGameOver = () => {
-//     // Update high score if the current score is greater
-//     if (score > highScore) {
-//       setHighScore(score);
-//     }
-//     alert(`Game Over. Your final score is ${score}`);
-//     setSnakeDots([
-//       [0, 0],
-//       [2, 0],
-//     ]);
-//     setDirection("RIGHT");
-//     setSpeed(200);
-//     setScore(0); // Reset the score
-//   };
-
-//   return (
-//     <>
-//       <div className="schore-area flex justify-around items-center">
-//         <div className="text-3xl">
-//           <div className="score">Score: {score}</div>
-//           <div className="high-score">High Score: {highScore}</div>
-//         </div>
-//         <div className="pause-button" onClick={togglePause}>
-//           {paused && <FaPlay size={40} />}
-//           {!paused && <IoMdPause size={40} />}
-//         </div>
-//       </div>
-//       <div className="game-area bg-[#cce705] border-4 border-[#101503]">
-//         <Snake snakeDots={snakeDots} />
-//         <Food foodDot={foodDot} />
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Game;
-
 // Game.js
 import React, { useState, useEffect } from "react";
 import Snake from "./Snake";
 import Food from "./Food";
 import { FaPlay } from "react-icons/fa";
 import { IoMdPause } from "react-icons/io";
+import BigFood from "./BigFood";
 
 const Game = () => {
   const getRandomCoordinates = () => {
@@ -198,11 +21,13 @@ const Game = () => {
   ]);
   const [foodDot, setFoodDot] = useState(getRandomCoordinates());
   const [direction, setDirection] = useState("RIGHT");
-  const [speed, setSpeed] = useState(200);
+  const [speed, setSpeed] = useState(100);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [paused, setPaused] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
+  const [bigFoodDot, setBigFoodDot] = useState(null);
+  const [foodEatenCount, setFoodEatenCount] = useState(0);
 
   useEffect(() => {
     document.onkeydown = onKeyDown;
@@ -212,6 +37,16 @@ const Game = () => {
     const gameInterval = setInterval(moveSnake, speed);
     return () => clearInterval(gameInterval);
   }, [snakeDots, paused]);
+
+  useEffect(() => {
+    console.log("usee");
+    // Generate big food item when the snake eats 5 regular food items
+    if (foodEatenCount === 5) {
+      console.log("five eaten");
+      setBigFoodDot(getRandomCoordinates());
+      setFoodEatenCount(0); // Reset the count
+    }
+  }, [score]);
 
   const onKeyDown = (e) => {
     e = e || window.event;
@@ -303,6 +138,12 @@ const Game = () => {
       enlargeSnake();
       increaseSpeed();
       setScore(score + 1);
+      setFoodEatenCount(foodEatenCount + 1);
+    }
+
+    if (bigFoodDot && head[0] === bigFoodDot[0] && head[1] === bigFoodDot[1]) {
+      setBigFoodDot(null); // Remove the big food item
+      setScore(score + 5); // Add 5 points to the score
     }
   };
 
@@ -314,7 +155,7 @@ const Game = () => {
 
   const increaseSpeed = () => {
     if (speed > 10) {
-      setSpeed(speed - 10);
+      setSpeed(speed - 0.5);
     }
   };
 
@@ -346,8 +187,9 @@ const Game = () => {
       [2, 0],
     ]);
     setDirection("RIGHT");
-    setSpeed(200);
+    setSpeed(100);
     setScore(0);
+    setFoodEatenCount(0);
   };
 
   const togglePause = () => {
@@ -355,12 +197,15 @@ const Game = () => {
   };
 
   const gameBoardStyle = {
-    height: '80vh',
+    height: "400px",
+    width: "94vw",
+    maxWidth: "400px",
+    border: "1px solid red",
   };
 
   return (
-    <div className="h-80">
-      <div className="schore-area flex justify-around items-center">
+    <div className="h-[80vh] w-[100%] px-2 flex flex-col items-center">
+      <div className="score-area flex justify-around items-center border-b-2 pt-2 border-[#101503]">
         <div className="text-3xl">
           <div className="score">Score: {score}</div>
           <div className="high-score">High Score: {highScore}</div>
@@ -371,7 +216,7 @@ const Game = () => {
         </div>
       </div>
       <div
-        className="game-area bg-[#cce705] border-4 border-[#101503]"
+        className="game-area bg-[#cce705] mt-2  "
         style={gameBoardStyle}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -379,6 +224,7 @@ const Game = () => {
       >
         <Snake snakeDots={snakeDots} />
         <Food foodDot={foodDot} />
+        {bigFoodDot && <BigFood bigFoodDot={bigFoodDot} />}
       </div>
     </div>
   );
