@@ -354,8 +354,12 @@ const Game = () => {
     setPaused(!paused);
   };
 
+  const gameBoardStyle = {
+    height: '80vh',
+  };
+
   return (
-    <>
+    <div className="h-80">
       <div className="schore-area flex justify-around items-center">
         <div className="text-3xl">
           <div className="score">Score: {score}</div>
@@ -368,6 +372,7 @@ const Game = () => {
       </div>
       <div
         className="game-area bg-[#cce705] border-4 border-[#101503]"
+        style={gameBoardStyle}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -375,21 +380,7 @@ const Game = () => {
         <Snake snakeDots={snakeDots} />
         <Food foodDot={foodDot} />
       </div>
-    </>
-    //     <div className="schore-area flex justify-around items-center">
-    // //         <div className="text-3xl">
-    // //           <div className="score">Score: {score}</div>
-    // //           <div className="high-score">High Score: {highScore}</div>
-    // //         </div>
-    // //         <div className="pause-button" onClick={togglePause}>
-    // //           {paused && <FaPlay size={40} />}
-    // //           {!paused && <IoMdPause size={40} />}
-    // //         </div>
-    // //       </div>
-    //       <div className="game-area bg-[#cce705] border-4 border-[#101503]">
-    //         <Snake snakeDots={snakeDots} />
-    //         <Food foodDot={foodDot} />
-    //       </div>
+    </div>
   );
 };
 
