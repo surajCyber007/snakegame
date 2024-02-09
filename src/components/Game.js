@@ -11,8 +11,16 @@ import {
   FaCircleChevronRight,
   FaCircleChevronUp,
 } from "react-icons/fa6";
+import foodPop from "../sounds/food-pop.wav";
+import bigFoodPop from "../sounds/big-food-pop.wav";
+import gameOver from "../sounds/game-over.wav";
+import GameOverPopup from "./GameOverPopup";
 
 const Game = () => {
+  const foodGenerationSound = new Audio(foodPop);
+  const bigFoodGeneration = new Audio(bigFoodPop);
+  const gameOverSound = new Audio(gameOver);
+
   const getRandomCoordinates = () => {
     let min = 1;
     let max = 98;
@@ -34,6 +42,8 @@ const Game = () => {
   const [touchStart, setTouchStart] = useState(null);
   const [bigFoodDot, setBigFoodDot] = useState(null);
   const [foodEatenCount, setFoodEatenCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [sendScore, setSendScore] = useState(0);
 
   useEffect(() => {
     document.onkeydown = onKeyDown;
@@ -48,6 +58,7 @@ const Game = () => {
     if (foodEatenCount === 5) {
       setBigFoodDot(getRandomCoordinates());
       setFoodEatenCount(0); // Reset the count
+      bigFoodGeneration.play();
     }
   }, [score]);
 
@@ -158,12 +169,14 @@ const Game = () => {
       increaseSpeed();
       setScore(score + 5);
       setFoodEatenCount(foodEatenCount + 1);
+      foodGenerationSound.play();
     }
 
     if (bigFoodDot && head[0] === bigFoodDot[0] && head[1] === bigFoodDot[1]) {
       setBigFoodDot(null); // Remove the big food item
       setScore(score + 25); // Add 5 points to the score
       enlargeSnake(5);
+      foodGenerationSound.play();
     }
   };
 
@@ -214,14 +227,17 @@ const Game = () => {
     if (score > highScore) {
       setHighScore(score);
     }
-    alert(`Game Over. Your final score is ${score}`);
+    setPaused(true);
+    setShowModal(true);
+    gameOverSound.play();
+    setSendScore(score);
+    setScore(0);
     setSnakeDots([
       [0, 0],
       [2, 0],
     ]);
     setDirection("RIGHT");
     setSpeed(100);
-    setScore(0);
     setFoodEatenCount(0);
     setBigFoodDot(null);
   };
@@ -230,20 +246,25 @@ const Game = () => {
     setPaused(!paused);
   };
 
+  const handleReplayGame = () => {
+    setShowModal(false);
+    setPaused(false);
+  };
+
   const gameBoardStyle = {
     height: "400px",
     width: "94vw",
     maxWidth: "400px",
-    border: "1px solid red",
+    border: "1px solid #2e3d06",
   };
 
   return (
-    <>
-      <div className="h-[80vh] w-[100%] px-2 flex flex-col items-center">
-        <div className="score-area flex justify-around items-center border-b-2 pt-2 border-[#101503]">
-          <div className="text-3xl">
-            <div className="score">Score: {score}</div>
-            <div className="high-score">High Score: {highScore}</div>
+    <div className="relative">
+      <div className="h-[60vh] w-[100%] px-2 flex flex-col items-center">
+        <div className="score-area flex justify-around items-center border-b-2 border-[#101503]">
+          <div className="text-2xl">
+            <div className="text-[#2e3d06]">Score: {score}</div>
+            <div className="text-[#2e3d06]">High Score: {highScore}</div>
           </div>
           <div className="pause-button" onClick={togglePause}>
             {paused && <FaPlay size={40} />}
@@ -262,13 +283,13 @@ const Game = () => {
           {bigFoodDot && <BigFood bigFoodDot={bigFoodDot} />}
         </div>
       </div>
-      <div className="mt-5">
+      <div className="bg-[#cce705] flex justify-center flex-col items-center fixed bottom-0 left-0 w-[100vw]">
         <div>
           <button onClick={() => onKeyDown(38)}>
             <FaCircleChevronUp fill="#69760c" size={44} />
           </button>
         </div>
-        <div className="flex space-x-12 -ms-11 -mt-1 ">
+        <div className="flex space-x-12 -mt-1">
           <button onClick={() => onKeyDown(37)}>
             <FaCircleChevronLeft fill="#69760c" size={44} />
           </button>
@@ -282,7 +303,12 @@ const Game = () => {
           </button>
         </div>
       </div>
-    </>
+      {showModal && (
+        <div>
+          <GameOverPopup sendScore={sendScore} handleClosePopup={handleReplayGame} />
+        </div>
+      )}
+    </div>
   );
 };
 

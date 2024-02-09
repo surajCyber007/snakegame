@@ -12,14 +12,6 @@
   position: relative;
 }
 
-.score {
-  color: white;
-}
-
-.high-score {
-  color: white;
-}
-
 /* Snake.css */
 .snake-dot {
   width: 10px;
@@ -53,6 +45,6 @@
   position: absolute;
   width: 15px; 
   height: 15px;
-  background-color: red; 
+  background-color: #2e3d06; 
   border-radius: 50%; 
 }
