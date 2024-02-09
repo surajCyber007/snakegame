@@ -51,8 +51,8 @@
 
 .big-food {
   position: absolute;
-  width: 15px; /* Adjust the width and height as needed */
+  width: 15px; 
   height: 15px;
-  background-color: red; /* Adjust the background color or add an image */
-  border-radius: 50%; /* Makes it round, adjust as needed */
+  background-color: red; 
+  border-radius: 50%; 
 }

@@ -250,20 +250,20 @@ const Game = () => {
       <div className="mt-5">
         <div>
           <button onClick={()=>onKeyDown(38)}>
-            <FaCircleChevronUp size={40} />
+            <FaCircleChevronUp fill="#69760c" size={44} />
           </button>
         </div>
-        <div className="flex space-x-8 -ms-9 -my-1">
+        <div className="flex space-x-12 -ms-11 -mt-1 ">
           <button onClick={()=>onKeyDown(37)}>
-            <FaCircleChevronLeft size={40} />
+            <FaCircleChevronLeft fill="#69760c" size={44} />
           </button>
           <button onClick={()=>onKeyDown(39)}>
-            <FaCircleChevronRight size={40} />
+            <FaCircleChevronRight fill="#69760c" size={44} />
           </button>
         </div>
         <div>
           <button onClick={()=>onKeyDown(40)}>
-            <FaCircleChevronDown size={40} />
+            <FaCircleChevronDown fill="#69760c" size={44} />
           </button>
         </div>
       </div>
