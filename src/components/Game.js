@@ -5,6 +5,12 @@ import Food from "./Food";
 import { FaPlay } from "react-icons/fa";
 import { IoMdPause } from "react-icons/io";
 import BigFood from "./BigFood";
+import {
+  FaCircleChevronDown,
+  FaCircleChevronLeft,
+  FaCircleChevronRight,
+  FaCircleChevronUp,
+} from "react-icons/fa6";
 
 const Game = () => {
   const getRandomCoordinates = () => {
@@ -39,18 +45,16 @@ const Game = () => {
   }, [snakeDots, paused]);
 
   useEffect(() => {
-    console.log("usee");
-    // Generate big food item when the snake eats 5 regular food items
     if (foodEatenCount === 5) {
-      console.log("five eaten");
       setBigFoodDot(getRandomCoordinates());
       setFoodEatenCount(0); // Reset the count
     }
   }, [score]);
 
   const onKeyDown = (e) => {
+    console.log(e)
     e = e || window.event;
-    switch (e.keyCode) {
+    switch (e.keyCode || e) {
       case 38:
         setDirection("UP");
         break;
@@ -63,7 +67,7 @@ const Game = () => {
       case 39:
         setDirection("RIGHT");
         break;
-      case 80:
+      case 32:
         togglePause();
         break;
       default:
@@ -135,21 +139,35 @@ const Game = () => {
 
     if (head[0] === food[0] && head[1] === food[1]) {
       setFoodDot(getRandomCoordinates());
-      enlargeSnake();
+      enlargeSnake(1);
       increaseSpeed();
-      setScore(score + 1);
+      setScore(score + 5);
       setFoodEatenCount(foodEatenCount + 1);
     }
 
     if (bigFoodDot && head[0] === bigFoodDot[0] && head[1] === bigFoodDot[1]) {
       setBigFoodDot(null); // Remove the big food item
-      setScore(score + 5); // Add 5 points to the score
+      setScore(score + 25); // Add 5 points to the score
+      enlargeSnake(5);
     }
   };
 
-  const enlargeSnake = () => {
-    let newSnake = [...snakeDots];
-    newSnake.unshift([]);
+  //   const enlargeSnake = () => {
+  //     let newSnake = [...snakeDots];
+  //     newSnake.unshift([]);
+  //     setSnakeDots(newSnake);
+  //   };
+
+  const enlargeSnake = (amount) => {
+    // Duplicate the coordinates of the current head
+    const newHead = [...snakeDots[0]];
+
+    // Add the duplicated head to the beginning of the snake's dots array
+    const newSnake = Array.from({ length: amount }, () => newHead).concat(
+      snakeDots
+    );
+
+    // Update the state with the new snake
     setSnakeDots(newSnake);
   };
 
@@ -190,6 +208,7 @@ const Game = () => {
     setSpeed(100);
     setScore(0);
     setFoodEatenCount(0);
+    setBigFoodDot(null);
   };
 
   const togglePause = () => {
@@ -204,29 +223,51 @@ const Game = () => {
   };
 
   return (
-    <div className="h-[80vh] w-[100%] px-2 flex flex-col items-center">
-      <div className="score-area flex justify-around items-center border-b-2 pt-2 border-[#101503]">
-        <div className="text-3xl">
-          <div className="score">Score: {score}</div>
-          <div className="high-score">High Score: {highScore}</div>
+    <>
+      <div className="h-[80vh] w-[100%] px-2 flex flex-col items-center">
+        <div className="score-area flex justify-around items-center border-b-2 pt-2 border-[#101503]">
+          <div className="text-3xl">
+            <div className="score">Score: {score}</div>
+            <div className="high-score">High Score: {highScore}</div>
+          </div>
+          <div className="pause-button" onClick={togglePause}>
+            {paused && <FaPlay size={40} />}
+            {!paused && <IoMdPause size={40} />}
+          </div>
         </div>
-        <div className="pause-button" onClick={togglePause}>
-          {paused && <FaPlay size={40} />}
-          {!paused && <IoMdPause size={40} />}
+        <div
+          className="game-area bg-[#cce705] mt-2  "
+          style={gameBoardStyle}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          <Snake snakeDots={snakeDots} />
+          <Food foodDot={foodDot} />
+          {bigFoodDot && <BigFood bigFoodDot={bigFoodDot} />}
         </div>
       </div>
-      <div
-        className="game-area bg-[#cce705] mt-2  "
-        style={gameBoardStyle}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        <Snake snakeDots={snakeDots} />
-        <Food foodDot={foodDot} />
-        {bigFoodDot && <BigFood bigFoodDot={bigFoodDot} />}
+      <div className="mt-5">
+        <div>
+          <button onClick={()=>onKeyDown(38)}>
+            <FaCircleChevronUp size={40} />
+          </button>
+        </div>
+        <div className="flex space-x-8 -ms-9 -my-1">
+          <button onClick={()=>onKeyDown(37)}>
+            <FaCircleChevronLeft size={40} />
+          </button>
+          <button onClick={()=>onKeyDown(39)}>
+            <FaCircleChevronRight size={40} />
+          </button>
+        </div>
+        <div>
+          <button onClick={()=>onKeyDown(40)}>
+            <FaCircleChevronDown size={40} />
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
