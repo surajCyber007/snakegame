@@ -71,17 +71,17 @@ const Game = () => {
   //   }, [score]);
 
   useEffect(() => {
-    if (foodEatenCount === 5) {
+    if (foodEatenCount === 2) {
+      bigFoodGeneration.play();
       setBigFoodDot(getRandomCoordinates());
       setFoodEatenCount(0); // Reset the count
-      bigFoodGeneration.play();
 
       // Set a timer for ten seconds
       const timer = setTimeout(() => {
         // If the big food is not eaten within ten seconds, remove it
         setBigFoodDot(null);
         bigFoodDisap.play();
-      }, 10000);
+      }, 4000);
 
       // Save the timer ID
       setTimerId(timer);
@@ -198,7 +198,7 @@ const Game = () => {
 
     if (head[0] === food[0] && head[1] === food[1]) {
       setFoodDot(getRandomCoordinates());
-      enlargeSnake(1);
+      enlargeSnake(2);
       increaseSpeed();
       setScore(score + 5);
       setFoodEatenCount(foodEatenCount + 1);
@@ -281,12 +281,12 @@ const Game = () => {
 
   const toggleSpeedIcon = () => {
     setShowSpeed(!showSpeed);
-    setPaused(!paused);
+    setPaused(true);
   };
 
-  const toggleRules = () => {
+  const toggleRules = (val) => {
     setShowRules(!showRules);
-    setPaused(!paused);
+    setPaused(val);
   };
 
   const handleSpeedChange = (speed) => {
@@ -356,7 +356,7 @@ const Game = () => {
           <CgNotes fill="#69760c" size={40} />
         </button>
 
-        {showRules && <RulesPopup toggleRules={toggleRules} />}
+        {showRules && <RulesPopup toggleRules={() => toggleRules(false)} />}
 
         <button className="absolute right-8 top-4" onClick={toggleSpeedIcon}>
           <SlSpeedometer fill="#69760c" size={40} />

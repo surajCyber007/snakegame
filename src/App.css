@@ -21,13 +21,13 @@
 }
 
 .snake-head {
-  background-color: #2e3d06;
+  background-color: red !important;
   height: 10px;
   width: 10px;
 }
 
 .snake-tail {
-  background-color: #2e3d06;
+  background-color: green !important;
   height: 10px;
   width: 10px;
 }
