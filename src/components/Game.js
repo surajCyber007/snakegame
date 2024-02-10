@@ -71,7 +71,7 @@ const Game = () => {
   //   }, [score]);
 
   useEffect(() => {
-    if (foodEatenCount === 2) {
+    if (foodEatenCount === 4) {
       bigFoodGeneration.play();
       setBigFoodDot(getRandomCoordinates());
       setFoodEatenCount(0); // Reset the count
@@ -81,7 +81,7 @@ const Game = () => {
         // If the big food is not eaten within ten seconds, remove it
         setBigFoodDot(null);
         bigFoodDisap.play();
-      }, 4000);
+      }, 10000);
 
       // Save the timer ID
       setTimerId(timer);
